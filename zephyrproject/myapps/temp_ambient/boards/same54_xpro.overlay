@@ -1,0 +1,62 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (c) 2021 Gerson Fernando Budke <nandojve@gmail.com>
+ */
+
+/ {
+    aliases {
+        my-mcp9808-1 = &mcp9808_18_sercom3;
+        my-mcp9808-2 = &mcp9808_18_sercom7;
+        my-opt3001-1 = &opt3001_44_sercom7;
+        i2c-1 = &sercom3;
+    };
+};
+
+&pinctrl {
+	sercom3_i2c_default: sercom3_i2c_default {
+		group1 {
+			pinmux = <PA22C_SERCOM3_PAD0>,
+				 <PA23C_SERCOM3_PAD1>;
+		};
+	};
+};
+
+&sercom3 {
+	status = "okay";
+	compatible = "atmel,sam0-i2c";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	pinctrl-0 = <&sercom3_i2c_default>;
+	pinctrl-names = "default";
+
+	// Label: name of our device node
+    mcp9808_18_sercom3: mcp9808@18 {
+        compatible = "microchip,mcp9808"; 					// Specify device bindings/driver
+        reg = <0x18>; 										// I2C address of the MCP9808
+        label = "MCP9808";
+        status = "okay"; 									// Enable the MCP9808 sensor
+        resolution = <3>; 									// Set the resolution
+    };
+};
+
+&sercom7 {
+	status = "okay";
+
+    mcp9808_18_sercom7: mcp9808@18 {
+        compatible = "microchip,mcp9808"; 					// Specify device bindings/driver
+        reg = <0x18>; 										// I2C address of the MCP9808
+        label = "MCP9808";
+        status = "okay"; 									// Enable the MCP9808 sensor
+        resolution = <3>; 									// Set the resolution
+    };    
+
+    opt3001_44_sercom7: opt3001@44 {
+        compatible = "ti,opt3001"; 					        // Specify device bindings/driver
+        reg = <0x44>; 										// I2C address of the OPT3001
+        label = "OPT3001";
+        status = "okay"; 									// Enable the OPT3001 sensor
+    };      
+};
